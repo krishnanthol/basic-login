@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, List, ListItem, ListItemText } from '@mui/material';
 
-// Sound files
-const sounds = [
-  new Audio('/ios_17_radial.mp3'),
-  new Audio('/iphone_apex_ringtone.mp3'),
-  new Audio('/piano_riff_apple.mp3')
-];
-
 const conditionsList = [
   { key: 'length', text: 'At least 10 characters', check: (password: string) => password.length >= 10 },
   { key: 'uppercase', text: 'At least two uppercase letters', check: (password: string) => (password.match(/[A-Z]/g) || []).length >= 2 },
@@ -32,11 +25,6 @@ const getRandomColor = () => {
   return color;
 };
 
-const getRandomSound = () => {
-  const randomIndex = Math.floor(Math.random() * sounds.length);
-  return sounds[randomIndex];
-};
-
 const ForgotPassword: React.FC = () => {
   const [password, setPassword] = useState('');
   const [currentConditions, setCurrentConditions] = useState(getRandomConditions());
@@ -48,7 +36,6 @@ const ForgotPassword: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    getRandomSound().play(); // Play random sound on button click
     alert('You can never set a new password! 😜');
     shakeScreen();
     jumpTitle();
@@ -72,24 +59,15 @@ const ForgotPassword: React.FC = () => {
     const newPassword = e.target.value;
     setPassword(newPassword);
 
-    // Check which conditions are met
     const satisfiedConditions = conditionsList.filter(condition => condition.check(newPassword)).map(condition => condition.text);
     setMetConditions(satisfiedConditions);
 
-    // Always reset conditions on password change
     setCurrentConditions(getRandomConditions());
-    
-    // Change background color aggressively
     setBgColor(getRandomColor());
-    
-    // Trigger flash effect
     setFlash(true);
     setTimeout(() => {
       setFlash(false);
     }, 500);
-
-    // Play a random sound when the password is changed
-    getRandomSound().play();
   };
 
   return (
